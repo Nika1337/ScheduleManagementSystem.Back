@@ -6,8 +6,8 @@ namespace Domain.Specification.ScheduleChangeRequests.Results;
 
 public record ScheduleChangeRequestDetailedResult
 {
-    public required int Id { get; init; }
-    public required string WorkerId { get; init; }
+    public required Guid Id { get; init; }
+    public required Guid WorkerId { get; init; }
     public required string JobName { get; init; }
     public required DateOnly PreviousDate { get; init; }
     public required PartOfDay PreviousPartOfDay {  get; init; }
