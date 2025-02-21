@@ -4,7 +4,8 @@ namespace Domain.Models;
 
 public class ScheduleChangeRequest : BaseModel
 {
-    public required Schedule scheduleToChange;
-    public required DateOnly NewDateUtc;
-    public required PartOfDay NewPartOfDay;
+    public required Schedule ScheduleToChange { get; set; }
+    public required DateOnly NewDateUtc { get; set; }
+    public required PartOfDay NewPartOfDay { get; set; }
+    public required DateTime RequestDateTime { get; set; }
 }
