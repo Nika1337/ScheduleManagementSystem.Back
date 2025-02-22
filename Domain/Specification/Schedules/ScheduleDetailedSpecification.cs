@@ -6,9 +6,9 @@ using Domain.Specification.Schedules.Results;
 
 namespace Domain.Specification.Schedules;
 
-public class ScheduleDetailedSpecification : BaseModelByIdSpecification<Schedule, ScheduleDetailedResult>
+public class ScheduleDetailedSpecification : Specification<Schedule, ScheduleDetailedResult>
 {
-    public ScheduleDetailedSpecification(Guid id) : base(id)
+    public ScheduleDetailedSpecification()
     {
         Query.Select(s => new ScheduleDetailedResult
         {
