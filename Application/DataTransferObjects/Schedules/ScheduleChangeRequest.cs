@@ -4,7 +4,7 @@ using Domain.Models;
 
 namespace Application.DataTransferObjects.Schedules;
 
-public record ScheduleUpdateRequest
+public record ScheduleChangeRequest
 {
     public Guid Id { get; init; }
     public DateOnly Date { get; init; }
