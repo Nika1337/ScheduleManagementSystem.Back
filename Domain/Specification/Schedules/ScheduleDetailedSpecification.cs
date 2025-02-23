@@ -8,8 +8,10 @@ namespace Domain.Specification.Schedules;
 
 public class ScheduleDetailedSpecification : Specification<Schedule, ScheduleDetailedResult>
 {
-    public ScheduleDetailedSpecification()
+    public ScheduleDetailedSpecification(DateOnly startDate, DateOnly endDate)
     {
+        Query.Where(s => s.ScheduledAtDate >= startDate && s.ScheduledAtDate < endDate);
+
         Query.Select(s => new ScheduleDetailedResult
         {
             Id = s.Id,
@@ -18,5 +20,10 @@ public class ScheduleDetailedSpecification : Specification<Schedule, ScheduleDet
             Date = s.ScheduledAtDate,
             PartOfDay = s.ScheduledAtPartOfDay
         });
+    }
+
+    public ScheduleDetailedSpecification(Guid workerId, DateOnly startDate, DateOnly endDate) : this(startDate, endDate)
+    {
+        Query.Where(s => s.ScheduleOfWorkerId == workerId);
     }
 }
