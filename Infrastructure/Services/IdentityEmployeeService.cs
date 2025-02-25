@@ -1,6 +1,4 @@
-﻿
-
-using Application.Abstractions;
+﻿using Application.Abstractions;
 using Application.DataTransferObjects.Employees;
 using Domain.Exceptions;
 using Infrastructure.Identity;
@@ -29,21 +27,21 @@ internal class IdentityEmployeeService : IEmployeeService
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
+            UserName = request.Email,
             StartDateUtc = DateTime.UtcNow
         };
 
         var creationResult = await _userManager.CreateAsync(identityEmployee, _temporaryPassword);
-
         if (!creationResult.Succeeded)
         {
-            throw new ApplicationException($"Unable to register employee with name '{identityEmployee.FirstName + " " + identityEmployee.LastName}'");
+            var errors = string.Join(", ", creationResult.Errors.Select(e => e.Description));
+            throw new ApplicationException($"Failed to register employee '{identityEmployee.FirstName} {identityEmployee.LastName}': {errors}");
         }
 
         var roleAdditionResult = await _userManager.AddToRoleAsync(identityEmployee, request.RoleName);
-
         if (!roleAdditionResult.Succeeded)
         {
-            throw new ApplicationException($"Unable to Add roles to employee with username '{identityEmployee.UserName}'");
+            throw new ApplicationException($"Failed to assign role '{request.RoleName}' to employee '{identityEmployee.UserName}'.");
         }
     }
 
@@ -61,35 +59,30 @@ internal class IdentityEmployeeService : IEmployeeService
                                    StartDateUtc = user.StartDateUtc,
                                    RoleName = role.Name ?? ""
                                })
-                       .GroupBy(e => e.Id)
-                       .Select(g => g.First()) 
                        .ToListAsync();
 
         return employees;
-
     }
 
     public async Task UpdateEmployeeAsync(EmployeeUpdateByAdminRequest request)
     {
-        var identityEmployee = await _userManager.FindByIdAsync(request.Id.ToString()) ?? throw new NotFoundException($"Employee with Id '{request.Id}' not found.");
+        var identityEmployee = await _userManager.FindByIdAsync(request.Id.ToString())
+            ?? throw new NotFoundException($"Employee with Id '{request.Id}' not found.");
 
         var currentRole = (await _userManager.GetRolesAsync(identityEmployee)).FirstOrDefault();
-
         var newRoleName = request.RoleName;
 
-        // If the new role is the same as the current role, do nothing
+        // If role is the same, do nothing
         if (currentRole == newRoleName)
-        {
             return;
-        }
 
-        // Remove existing role if it's different
+        // Remove existing role if different
         if (!string.IsNullOrEmpty(currentRole))
         {
             var roleRemovalResult = await _userManager.RemoveFromRoleAsync(identityEmployee, currentRole);
             if (!roleRemovalResult.Succeeded)
             {
-                throw new ApplicationException($"Unable to remove role '{currentRole}' for employee with Id {identityEmployee.Id}");
+                throw new ApplicationException($"Failed to remove role '{currentRole}' for employee with Id {identityEmployee.Id}");
             }
         }
 
@@ -99,18 +92,26 @@ internal class IdentityEmployeeService : IEmployeeService
             var roleAdditionResult = await _userManager.AddToRoleAsync(identityEmployee, newRoleName);
             if (!roleAdditionResult.Succeeded)
             {
-                throw new ApplicationException($"Unable to add role '{newRoleName}' for employee with Id {identityEmployee.Id}");
+                throw new ApplicationException($"Failed to add role '{newRoleName}' for employee with Id {identityEmployee.Id}");
             }
         }
+
     }
 
     public async Task UpdateEmployeeAsync(EmployeeProfileUpdateRequest request)
     {
-        var identityEmployee = await _userManager.FindByIdAsync(request.Id.ToString()) ?? throw new NotFoundException($"Employee with Id '{request.Id}' not found.");
-
+        var identityEmployee = await _userManager.FindByIdAsync(request.Id.ToString())
+            ?? throw new NotFoundException($"Employee with Id '{request.Id}' not found.");
 
         identityEmployee.FirstName = request.FirstName;
         identityEmployee.LastName = request.LastName;
         identityEmployee.Email = request.Email;
+
+        var updateResult = await _userManager.UpdateAsync(identityEmployee);
+        if (!updateResult.Succeeded)
+        {
+            var errors = string.Join(", ", updateResult.Errors.Select(e => e.Description));
+            throw new ApplicationException($"Failed to update profile for employee with Id {identityEmployee.Id}: {errors}");
+        }
     }
 }
