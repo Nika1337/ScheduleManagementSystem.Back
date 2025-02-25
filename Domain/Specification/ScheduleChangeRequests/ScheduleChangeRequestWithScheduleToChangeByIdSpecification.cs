@@ -4,7 +4,7 @@ using Domain.Models;
 
 namespace Domain.Specification.ScheduleChangeRequests;
 
-internal class ScheduleChangeRequestWithScheduleToChangeByIdSpecification : SingleResultSpecification<ScheduleChangeRequest>
+public class ScheduleChangeRequestWithScheduleToChangeByIdSpecification : SingleResultSpecification<ScheduleChangeRequest>
 {
     public ScheduleChangeRequestWithScheduleToChangeByIdSpecification(Guid id)
     {
