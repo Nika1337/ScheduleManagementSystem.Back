@@ -11,5 +11,7 @@ public class PendingScheduleChangeWithScheduleToChangeByIdSpecification : Single
         Query.Where(scr => scr.Id == id);
 
         Query.Include(scr => scr.ScheduleToChange);
+
+        Query.AsTracking();
     }
 }
