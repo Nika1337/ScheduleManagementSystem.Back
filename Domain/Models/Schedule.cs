@@ -8,5 +8,5 @@ public class Schedule : BaseModel
     public required Job JobToPerform { get; set; }
     public required DateOnly ScheduledAtDate { get; set; }
     public required PartOfDay ScheduledAtPartOfDay { get; set; }
-    public ScheduleChangeRequest? ScheduleChangeRequest { get; set; }
+    public PendingScheduleChange? PendingScheduleChange { get; set; }
 }

@@ -1,9 +1,9 @@
 ﻿
 using Domain.Models;
 
-namespace Application.DataTransferObjects.ScheduleChangeRequests;
+namespace Application.DataTransferObjects.PendingScheduleChanges;
 
-public record ScheduleChangeRequestResponse
+public record PendingScheduleChangeResponse
 {
     public required Guid Id { get; init; }
     public required string WorkerFirstName { get; init; }

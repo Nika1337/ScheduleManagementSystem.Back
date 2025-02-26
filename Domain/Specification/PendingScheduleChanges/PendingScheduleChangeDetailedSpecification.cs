@@ -1,14 +1,14 @@
 ﻿using Ardalis.Specification;
 using Domain.Models;
-using Domain.Specification.ScheduleChangeRequests.Results;
+using Domain.Specification.PendingScheduleChanges.Results;
 
-namespace Domain.Specification.ScheduleChangeRequests;
+namespace Domain.Specification.PendingScheduleChanges;
 
-public class ScheduleChangeDetailedSpecification : Specification<ScheduleChangeRequest, ScheduleChangeRequestDetailedResult>
+public class PendingScheduleChangeDetailedSpecification : Specification<PendingScheduleChange, PendingScheduleChangeDetailedResult>
 {
-    public ScheduleChangeDetailedSpecification()
+    public PendingScheduleChangeDetailedSpecification()
     {
-        Query.Select(scr => new ScheduleChangeRequestDetailedResult
+        Query.Select(scr => new PendingScheduleChangeDetailedResult
         {
             Id = scr.Id,
             WorkerId = scr.ScheduleToChange.ScheduleOfWorkerId,

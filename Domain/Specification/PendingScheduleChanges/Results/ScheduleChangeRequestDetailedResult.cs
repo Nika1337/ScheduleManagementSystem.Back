@@ -2,9 +2,9 @@
 
 using Domain.Models;
 
-namespace Domain.Specification.ScheduleChangeRequests.Results;
+namespace Domain.Specification.PendingScheduleChanges.Results;
 
-public record ScheduleChangeRequestDetailedResult
+public record PendingScheduleChangeDetailedResult
 {
     public required Guid Id { get; init; }
     public required Guid WorkerId { get; init; }

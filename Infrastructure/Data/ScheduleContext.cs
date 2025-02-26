@@ -9,7 +9,7 @@ internal class ScheduleContext(DbContextOptions<ScheduleContext> options) : DbCo
 {
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
-    public DbSet<ScheduleChangeRequest> ScheduleChangeRequests { get; set; }
+    public DbSet<PendingScheduleChange> PendingScheduleChanges { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -17,6 +17,6 @@ internal class ScheduleContext(DbContextOptions<ScheduleContext> options) : DbCo
 
         builder.ApplyConfiguration(new JobConfiguration());
         builder.ApplyConfiguration(new ScheduleConfiguration());
-        builder.ApplyConfiguration(new ScheduleChangeRequestConfiguration());
+        builder.ApplyConfiguration(new PendingScheduleChangeConfiguration());
     }
 }
