@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data.Config;
 
-internal class ScheduleChangeRequestConfiguration : IEntityTypeConfiguration<ScheduleChangeRequest>
+internal class PendingScheduleChangeConfiguration : IEntityTypeConfiguration<PendingScheduleChange>
 {
-    public void Configure(EntityTypeBuilder<ScheduleChangeRequest> builder)
+    public void Configure(EntityTypeBuilder<PendingScheduleChange> builder)
     {
         builder
             .HasKey(sch => sch.Id);

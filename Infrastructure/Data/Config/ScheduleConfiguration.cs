@@ -18,7 +18,7 @@ internal class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
             .WithMany();
 
         builder
-            .HasOne(sch => sch.ScheduleChangeRequest)
+            .HasOne(sch => sch.PendingScheduleChange)
             .WithOne(sch => sch.ScheduleToChange);
 
         builder

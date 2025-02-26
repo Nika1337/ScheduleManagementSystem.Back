@@ -2,7 +2,7 @@
 
 namespace Domain.Models;
 
-public class ScheduleChangeRequest : BaseModel
+public class PendingScheduleChange : BaseModel
 {
     public required Schedule ScheduleToChange { get; set; }
     public required DateOnly NewDateUtc { get; set; }
