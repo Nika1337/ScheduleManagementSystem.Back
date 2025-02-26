@@ -11,5 +11,7 @@ public class ScheduleWithPendingChangeByIdSpecification : SingleResultSpecificat
         Query.Where(sch => sch.Id == id);
 
         Query.Include(sch => sch.PendingScheduleChange);
+
+        Query.AsTracking();
     }
 }
