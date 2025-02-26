@@ -12,24 +12,28 @@ internal class ScheduleService : IScheduleService
 {
     private readonly IRepository<Schedule> _repository;
     private readonly IRepository<Job> _jobRepository;
+    private readonly IWorkerService _workerService;
 
-    public ScheduleService(IRepository<Schedule> repository, IRepository<Job> jobRepository)
+    public ScheduleService(IRepository<Schedule> repository, IRepository<Job> jobRepository, IWorkerService workerService)
     {
         _repository = repository;
         _jobRepository = jobRepository;
+        _workerService = workerService;
     }
 
     public async Task<IEnumerable<ScheduleDetailedResponse>> GetSchedulesAsync(DateOnly startDate, DateOnly endDate)
     {
         var specification = new ScheduleDetailedSpecification(startDate, endDate);
 
-        var entities = await _repository.ListAsync(specification);
+        var schedules = await _repository.ListAsync(specification);
 
-        var response = entities.Select(sch => new ScheduleDetailedResponse
+        var workerFullNames = await _workerService.GetWorkerFullNamesAsync(schedules.Select(sch => sch.Id).ToList());
+
+        var response = schedules.Select(sch => new ScheduleDetailedResponse
         {
             Id = sch.Id,
-            WorkerFirstName = "",
-            WorkerLastName = "",
+            WorkerFirstName = workerFullNames[sch.WorkerId].FirstName,
+            WorkerLastName = workerFullNames[sch.WorkerId].LastName,
             Date = sch.Date,
             PartOfDay = sch.PartOfDay,
         });
@@ -42,12 +46,14 @@ internal class ScheduleService : IScheduleService
         var specification = new ScheduleDetailedSpecification(workerId, startDate, endDate);
 
         var entities = await _repository.ListAsync(specification);
+        
+        var (FirstName, LastName) = await _workerService.GetWorkerFullNameAsync(workerId);
 
         var response = entities.Select(sch => new ScheduleDetailedResponse
         {
             Id = sch.Id,
-            WorkerFirstName = "",
-            WorkerLastName = "",
+            WorkerFirstName = FirstName,
+            WorkerLastName = LastName,
             Date = sch.Date,
             PartOfDay = sch.PartOfDay,
         });
