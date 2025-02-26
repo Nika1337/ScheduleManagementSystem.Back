@@ -4,7 +4,7 @@ using Domain.Models;
 
 namespace Domain.Specification.Schedules;
 
-public class ScheduleWithPendingChangeByIdSpecification : Specification<Schedule>
+public class ScheduleWithPendingChangeByIdSpecification : SingleResultSpecification<Schedule>
 {
     public ScheduleWithPendingChangeByIdSpecification(Guid id)
     {
