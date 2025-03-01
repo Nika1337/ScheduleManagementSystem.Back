@@ -13,12 +13,15 @@ internal sealed class Request
         public Validator()
         {
             RuleFor(r => r.FirstName)
+                .NotEmpty()
                 .Length(1, 250);
 
             RuleFor(r => r.LastName)
+                .NotEmpty()
                 .Length(1, 250);
 
             RuleFor(r => r.Email)
+                .NotEmpty()
                 .Length(1, 250)
                 .EmailAddress();
         }
