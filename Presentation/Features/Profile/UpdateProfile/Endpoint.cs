@@ -33,6 +33,7 @@ internal sealed class Endpoint : Endpoint<Request>
 
 
         await _employeeService.UpdateEmployeeAsync(updateRequest);
+        await SendNoContentAsync();
     }
 
 }
