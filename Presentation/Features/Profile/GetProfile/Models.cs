@@ -1,4 +1,4 @@
-﻿namespace Profile;
+﻿namespace Profile.GetProfile;
 
 internal sealed class Response
 {

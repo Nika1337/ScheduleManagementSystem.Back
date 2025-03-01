@@ -1,6 +1,6 @@
 ﻿using Application.DataTransferObjects.Employees;
 
-namespace Profile;
+namespace Profile.GetProfile;
 
 internal sealed class Mapper : ResponseMapper<Response, EmployeeProfileResponse>
 {

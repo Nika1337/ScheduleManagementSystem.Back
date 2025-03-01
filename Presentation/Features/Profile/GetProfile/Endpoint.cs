@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions;
 using System.Security.Claims;
 
-namespace Profile;
+namespace Profile.GetProfile;
 
 internal sealed class Endpoint : EndpointWithoutRequest<Response, Mapper>
 {
