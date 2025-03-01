@@ -14,7 +14,7 @@ internal sealed class Endpoint : EndpointWithoutRequest<Response, Mapper>
 
     public override void Configure()
     {
-        Post("/profile");
+        Get("/profile");
     }
 
     public override async Task HandleAsync(CancellationToken c)
