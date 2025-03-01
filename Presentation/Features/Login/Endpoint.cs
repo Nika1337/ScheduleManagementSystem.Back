@@ -4,7 +4,7 @@ using Application.DataTransferObjects.Employees;
 using Domain.Exceptions;
 using System.Security.Claims;
 
-namespace Public.Login;
+namespace Presentation.Features.Login;
 
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
@@ -40,7 +40,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             new(ClaimTypes.Role, employeeAuthenticationResult.RoleName)
         };
 
-        var jwtToken = JwtBearer.CreateToken( o =>
+        var jwtToken = JwtBearer.CreateToken(o =>
         {
             o.SigningKey = Config["JwtSigningKey"]!;
             o.ExpireAt = DateTime.UtcNow.AddHours(1);

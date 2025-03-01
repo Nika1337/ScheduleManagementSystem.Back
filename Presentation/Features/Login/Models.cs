@@ -1,7 +1,7 @@
 ﻿
 using FluentValidation;
 
-namespace Public.Login;
+namespace Presentation.Features.Login;
 
 internal sealed class Request
 {
