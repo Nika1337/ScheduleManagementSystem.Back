@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.DataTransferObjects.Employees;
+using Azure.Core;
 using Domain.Exceptions;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Entities;
@@ -45,6 +46,20 @@ internal class IdentityEmployeeService : IEmployeeService
         }
     }
 
+    public async Task<EmployeeProfileResponse> GetEmployeeProfileAsync(Guid id)
+    {
+        var identityEmployee = await GetIdentityEmployeeAsync(id);
+
+        var response = new EmployeeProfileResponse 
+        {
+            FirstName = identityEmployee.FirstName,
+            LastName = identityEmployee.LastName,
+            Email = identityEmployee.Email!
+        };
+
+        return response;
+    }
+
     public async Task<IEnumerable<EmployeeResponse>> GetEmployeesAsync()
     {
         var employees = await (from user in _dbContext.Users
@@ -66,8 +81,7 @@ internal class IdentityEmployeeService : IEmployeeService
 
     public async Task UpdateEmployeeAsync(EmployeeUpdateByAdminRequest request)
     {
-        var identityEmployee = await _userManager.FindByIdAsync(request.Id.ToString())
-            ?? throw new NotFoundException($"Employee with Id '{request.Id}' not found.");
+        var identityEmployee = await GetIdentityEmployeeAsync(request.Id);
 
         var currentRole = (await _userManager.GetRolesAsync(identityEmployee)).FirstOrDefault();
         var newRoleName = request.RoleName;
@@ -100,8 +114,7 @@ internal class IdentityEmployeeService : IEmployeeService
 
     public async Task UpdateEmployeeAsync(EmployeeProfileUpdateRequest request)
     {
-        var identityEmployee = await _userManager.FindByIdAsync(request.Id.ToString())
-            ?? throw new NotFoundException($"Employee with Id '{request.Id}' not found.");
+        var identityEmployee = await GetIdentityEmployeeAsync(request.Id);
 
         identityEmployee.FirstName = request.FirstName;
         identityEmployee.LastName = request.LastName;
@@ -113,5 +126,13 @@ internal class IdentityEmployeeService : IEmployeeService
             var errors = string.Join(", ", updateResult.Errors.Select(e => e.Description));
             throw new ApplicationException($"Failed to update profile for employee with Id {identityEmployee.Id}: {errors}");
         }
+    }
+
+    private async Task<IdentityEmployee> GetIdentityEmployeeAsync(Guid id)
+    {
+        var identityEmployee = await _userManager.FindByIdAsync(id.ToString())
+           ?? throw new NotFoundException($"Employee with Id '{id}' not found.");
+
+        return identityEmployee;
     }
 }
