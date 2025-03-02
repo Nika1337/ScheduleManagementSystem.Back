@@ -14,6 +14,7 @@ internal sealed class Endpoint : EndpointWithMapper<Request, Mapper>
     public override void Configure()
     {
         Post("/employees");
+        Roles("Admin");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)
