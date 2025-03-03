@@ -14,4 +14,9 @@ public class ScheduleWithPendingChangeByIdSpecification : SingleResultSpecificat
 
         Query.AsTracking();
     }
+
+    public ScheduleWithPendingChangeByIdSpecification(Guid id, Guid workerId) : this(id)
+    {
+        Query.Where(sch => sch.ScheduleOfWorkerId == workerId);
+    }
 }
