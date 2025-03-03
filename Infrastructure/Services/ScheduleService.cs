@@ -90,9 +90,9 @@ internal class ScheduleService : IScheduleService
         await _repository.UpdateAsync(schedule);
     }
 
-    public async Task RequestScheduleChangeAsync(ScheduleChangeRequest request)
+    public async Task RequestScheduleChangeAsync(ScheduleChangeByWorkerRequest request)
     {
-        var specification = new ScheduleWithPendingChangeByIdSpecification(request.Id);
+        var specification = new ScheduleWithPendingChangeByIdSpecification(request.Id, request.WorkerId);
 
         var schedule = await _repository.SingleOrDefaultAsync(specification) ?? throw new NotFoundException($"Schedule with id '{request.Id}' not found");
 
