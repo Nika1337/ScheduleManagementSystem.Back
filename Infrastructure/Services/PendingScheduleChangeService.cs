@@ -32,7 +32,7 @@ internal class PendingScheduleChangeService : IPendingScheduleChangeService
             PreviousPartOfDay = scr.PreviousPartOfDay,
             NewDate = scr.NewDate,
             NewPartOfDay = scr.NewPartOfDay,
-            RequestDate = scr.RequestDateTime
+            RequestDateTime = scr.RequestDateTime
         });
 
         return response;

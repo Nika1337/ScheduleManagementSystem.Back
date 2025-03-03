@@ -13,5 +13,5 @@ public record PendingScheduleChangeResponse
     public required PartOfDay PreviousPartOfDay { get; init; }
     public required DateOnly NewDate { get; init; }
     public required PartOfDay NewPartOfDay { get; init; }
-    public required DateTime RequestDate { get; init; }
+    public required DateTime RequestDateTime { get; init; }
 }

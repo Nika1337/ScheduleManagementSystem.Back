@@ -17,7 +17,7 @@ public class PendingScheduleChangeDetailedSpecification : Specification<PendingS
             PreviousPartOfDay = scr.ScheduleToChange.ScheduledAtPartOfDay,
             NewDate = scr.NewDateUtc,
             NewPartOfDay = scr.NewPartOfDay,
-            RequestDateTime = DateTime.MinValue 
+            RequestDateTime = scr.RequestDateTime,
         });
     }
 }
