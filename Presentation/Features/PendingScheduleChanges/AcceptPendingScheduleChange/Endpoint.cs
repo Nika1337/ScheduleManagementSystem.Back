@@ -21,6 +21,6 @@ internal sealed class Endpoint : Endpoint<Request>
     {
         await _pendingScheduleChangeService.AcceptPendingScheduleChange(r.Id);
 
-        await SendNoContentAsync(c);
+        await SendNoContentAsync();
     }
 }
