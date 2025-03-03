@@ -5,7 +5,6 @@ namespace Employees.UpdateEmployee;
 
 internal sealed class Request
 {
-    [FromRoute]
     public required Guid EmployeeId { get; init; }
     public required string RoleName { get; init; }
 
