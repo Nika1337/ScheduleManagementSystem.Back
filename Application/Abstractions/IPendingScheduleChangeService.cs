@@ -9,5 +9,5 @@ public interface IPendingScheduleChangeService
     Task<IEnumerable<PendingScheduleChangeResponse>> GetPendingScheduleChangesAsync(Guid workerId);
     Task AcceptPendingScheduleChange(Guid id);
     Task RejectPendingScheduleChange(Guid id);
-    Task WithdrawPendingScheduleChange(Guid id);
+    Task WithdrawPendingScheduleChange(Guid id, Guid workerId);
 }

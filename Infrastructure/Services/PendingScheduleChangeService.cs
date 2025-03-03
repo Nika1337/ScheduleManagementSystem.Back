@@ -87,9 +87,11 @@ internal class PendingScheduleChangeService : IPendingScheduleChangeService
         await ResetPendingScheduleChange(scheduleToChange, PendingScheduleChange);
     }
 
-    public async Task WithdrawPendingScheduleChange(Guid id)
+    public async Task WithdrawPendingScheduleChange(Guid id, Guid workerId)
     {
-        var PendingScheduleChange = await GetPendingScheduleChange(id);
+        var specification = new PendingScheduleChangeWithScheduleToChangeByIdSpecification(id, workerId);
+
+        var PendingScheduleChange = await _repository.SingleOrDefaultAsync(specification) ?? throw new NotFoundException($"Schedule change request with id '{id}' and worker id '{workerId}' not found.");
 
         var scheduleToChange = PendingScheduleChange.ScheduleToChange;
 
