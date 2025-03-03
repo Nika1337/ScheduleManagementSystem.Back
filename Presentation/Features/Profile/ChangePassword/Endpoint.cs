@@ -20,8 +20,8 @@ internal sealed class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var employeeIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
-        var employeeId = Guid.Parse(employeeIdClaim.Value);
+        var employeeIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
+        var employeeId = Guid.Parse(employeeIdClaim);
 
         try
         {
