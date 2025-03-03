@@ -13,7 +13,7 @@ internal sealed class Endpoint : EndpointWithoutRequest<IEnumerable<Response>, M
 
     public override void Configure()
     {
-        Get("jobs");
+        Get("/jobs");
         Roles("Admin");
     }
 
