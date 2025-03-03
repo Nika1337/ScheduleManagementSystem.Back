@@ -63,17 +63,15 @@ internal class ScheduleService : IScheduleService
 
     public async Task CreateScheduleAsync(ScheduleCreateRequest request)
     {
+        var job = await _jobRepository.GetByIdAsync(request.JobId) ?? throw new NotFoundException($"Job with id '{request.JobId}' not found.");
+
         var schedule = new Schedule
         {
             ScheduleOfWorkerId = request.WorkerId,
             ScheduledAtDate = request.Date,
             ScheduledAtPartOfDay = request.PartOfDay,
-            JobToPerform = null!
+            JobToPerform = job
         };
-
-        var job = await _jobRepository.GetByIdAsync(request.JobId) ?? throw new NotFoundException($"Job with id '{request.JobId}' not found.");
-
-        schedule.JobToPerform = job;
 
         await _repository.AddAsync(schedule);
     }
