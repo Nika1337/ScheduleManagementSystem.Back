@@ -19,8 +19,8 @@ internal sealed class Endpoint : EndpointWithoutRequest<Response, Mapper>
 
     public override async Task HandleAsync(CancellationToken c)
     {
-        var employeeIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
-        var employeeId = Guid.Parse(employeeIdClaim.Value);
+        var employeeIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
+        var employeeId = Guid.Parse(employeeIdClaim);
 
         var employee = await _employeeService.GetEmployeeProfileAsync(employeeId);
 
