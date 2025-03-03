@@ -38,6 +38,28 @@ internal class PendingScheduleChangeService : IPendingScheduleChangeService
         return response;
     }
 
+    public async Task<IEnumerable<PendingScheduleChangeResponse>> GetPendingScheduleChangesAsync(Guid workerId)
+    {
+        var specification = new PendingScheduleChangeDetailedSpecification(workerId);
+
+        var entities = await _repository.ListAsync(specification);
+
+        var response = entities.Select(scr => new PendingScheduleChangeResponse
+        {
+            Id = scr.Id,
+            WorkerFirstName = "",
+            WorkerLastName = "",
+            JobName = scr.JobName,
+            PreviousDate = scr.PreviousDate,
+            PreviousPartOfDay = scr.PreviousPartOfDay,
+            NewDate = scr.NewDate,
+            NewPartOfDay = scr.NewPartOfDay,
+            RequestDateTime = scr.RequestDateTime
+        });
+
+        return response;
+    }
+
     public async Task AcceptPendingScheduleChange(Guid id)
     {
         var PendingScheduleChange = await GetPendingScheduleChange(id);
