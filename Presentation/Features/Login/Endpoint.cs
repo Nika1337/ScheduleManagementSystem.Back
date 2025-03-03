@@ -43,7 +43,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         var jwtToken = JwtBearer.CreateToken(o =>
         {
             o.SigningKey = Config["JwtSigningKey"]!;
-            o.ExpireAt = DateTime.UtcNow.AddHours(1);
+            o.ExpireAt = DateTime.Now.AddHours(1);
             o.User.Claims.Add(claims);
         });
 
