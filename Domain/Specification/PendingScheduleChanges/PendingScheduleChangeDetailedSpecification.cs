@@ -15,7 +15,7 @@ public class PendingScheduleChangeDetailedSpecification : Specification<PendingS
             JobName = scr.ScheduleToChange.JobToPerform.Name,
             PreviousDate = scr.ScheduleToChange.ScheduledAtDate,
             PreviousPartOfDay = scr.ScheduleToChange.ScheduledAtPartOfDay,
-            NewDate = scr.NewDateUtc,
+            NewDate = scr.NewDate,
             NewPartOfDay = scr.NewPartOfDay,
             RequestDateTime = scr.RequestDateTime,
         });

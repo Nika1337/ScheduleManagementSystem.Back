@@ -72,7 +72,7 @@ internal class PendingScheduleChangeService : IPendingScheduleChangeService
 
         var scheduleToChange = PendingScheduleChange.ScheduleToChange;
 
-        scheduleToChange.ScheduledAtDate = PendingScheduleChange.NewDateUtc;
+        scheduleToChange.ScheduledAtDate = PendingScheduleChange.NewDate;
         scheduleToChange.ScheduledAtPartOfDay = PendingScheduleChange.NewPartOfDay;
 
         await ResetPendingScheduleChange(scheduleToChange, PendingScheduleChange);

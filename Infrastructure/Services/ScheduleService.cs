@@ -99,9 +99,9 @@ internal class ScheduleService : IScheduleService
         schedule.PendingScheduleChange = new PendingScheduleChange
         {
             ScheduleToChange = schedule,
-            NewDateUtc = request.Date,
+            NewDate = request.Date,
             NewPartOfDay = request.PartOfDay,
-            RequestDateTime = DateTime.UtcNow,
+            RequestDateTime = DateTime.Now,
         };
 
         await _repository.UpdateAsync(schedule);
