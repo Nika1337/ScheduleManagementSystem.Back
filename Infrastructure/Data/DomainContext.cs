@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-internal class ScheduleContext(DbContextOptions<ScheduleContext> options) : DbContext(options)
+internal class DomainContext(DbContextOptions<DomainContext> options) : DbContext(options)
 {
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Schedule> Schedules { get; set; }

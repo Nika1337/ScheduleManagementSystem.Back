@@ -4,6 +4,6 @@ using Domain.Abstractions;
 
 namespace Infrastructure.Data;
 
-internal class EfRepository<T>(ScheduleContext dbContext) : RepositoryBase<T>(dbContext), IRepository<T> where T : BaseModel
+internal class EfRepository<T>(DomainContext dbContext) : RepositoryBase<T>(dbContext), IRepository<T> where T : BaseModel
 {
 }
