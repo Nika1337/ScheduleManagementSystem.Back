@@ -20,4 +20,9 @@ public class PendingScheduleChangeDetailedSpecification : Specification<PendingS
             RequestDateTime = scr.RequestDateTime,
         });
     }
+
+    public PendingScheduleChangeDetailedSpecification(Guid workerId) : this()
+    {
+        Query.Where(scr => scr.ScheduleToChange.ScheduleOfWorkerId == workerId);
+    }
 }
