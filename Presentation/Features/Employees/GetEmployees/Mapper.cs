@@ -12,7 +12,7 @@ internal sealed class Mapper : ResponseMapper<Response, EmployeeResponse>
             FirstName = e.FirstName,
             LastName = e.LastName,
             Email = e.Email,
-            StartDateUtc = e.StartDateUtc,
+            StartDate = e.StartDate,
             RoleName = e.RoleName,
         };
     }

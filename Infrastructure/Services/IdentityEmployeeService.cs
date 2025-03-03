@@ -29,7 +29,7 @@ internal class IdentityEmployeeService : IEmployeeService
             LastName = request.LastName,
             Email = request.Email,
             UserName = request.Email,
-            StartDateUtc = DateTime.UtcNow
+            StartDateUtc = DateTime.Now
         };
 
         var creationResult = await _userManager.CreateAsync(identityEmployee, _temporaryPassword);
@@ -71,7 +71,7 @@ internal class IdentityEmployeeService : IEmployeeService
                                    FirstName = user.FirstName,
                                    LastName = user.LastName,
                                    Email = user.Email ?? "",
-                                   StartDateUtc = user.StartDateUtc,
+                                   StartDate = user.StartDateUtc,
                                    RoleName = role.Name ?? ""
                                })
                        .ToListAsync();
