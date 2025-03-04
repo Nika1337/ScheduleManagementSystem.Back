@@ -29,6 +29,11 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         {
             userAuthenticationResult = await _userAuthenticationService.AuthenticateAsync(r.Email, r.Password);
         }
+        catch (NotFoundException)
+        {
+            await SendUnauthorizedAsync();
+            return;
+        }
         catch (PasswordIncorrectException)
         {
             await SendUnauthorizedAsync();
