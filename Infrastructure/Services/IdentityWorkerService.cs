@@ -48,19 +48,12 @@ internal class IdentityWorkerService : IWorkerService
 
     public async Task<WorkerProfileResponse> GetWorkerProfileAsync(Guid id)
     {
-        var workerTask = _repository.GetByIdAsync(id);
-        var workerUserTask = _userManager.FindByIdAsync(id.ToString());
-
-        await Task.WhenAll(workerTask, workerUserTask);
-
-        var worker = workerTask.Result ?? throw new NotFoundException($"Worker with Id '{id}' not found.");
-        var workerUser = await workerUserTask ?? throw new NotFoundException($"User with Id '{id}' not found.");
+        var worker = await _repository.GetByIdAsync(id) ?? throw new NotFoundException($"Worker with Id '{id}' not found.");
 
         var response = new WorkerProfileResponse 
         {
             FirstName = worker.FirstName,
             LastName = worker.LastName,
-            Email = workerUser.Email ?? throw new ApplicationException($"Worker with id '{id}' doesn't have an email.")
         };
 
         return response;

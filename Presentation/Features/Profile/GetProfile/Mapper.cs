@@ -10,8 +10,7 @@ internal sealed class Mapper : ResponseMapper<Response, WorkerProfileResponse>
         return new Response
         {
             FirstName = e.FirstName,
-            LastName = e.LastName,
-            Email = e.Email,
+            LastName = e.LastName
         };
     }
 }
