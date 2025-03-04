@@ -1,9 +1,9 @@
 ﻿
 using Domain.Models;
-using Infrastructure.Data.Config;
+using Infrastructure.Data.Domain.Config;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Data;
+namespace Infrastructure.Data.Domain;
 
 internal class DomainContext(DbContextOptions<DomainContext> options) : DbContext(options)
 {

@@ -1,9 +1,7 @@
-﻿
-
-using Infrastructure.Identity.Entities;
+﻿using Infrastructure.Data.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Identity.Validators;
+namespace Infrastructure.Data.Identity.Validators;
 
 internal class EmployeePasswordValidator : IPasswordValidator<ApplicationUser>
 {

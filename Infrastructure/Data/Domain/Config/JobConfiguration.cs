@@ -4,7 +4,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Data.Config;
+namespace Infrastructure.Data.Domain.Config;
 
 internal class JobConfiguration : IEntityTypeConfiguration<Job>
 {

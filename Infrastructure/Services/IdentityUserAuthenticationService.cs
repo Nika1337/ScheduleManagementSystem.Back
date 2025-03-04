@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions;
 using Application.DataTransferObjects.Users;
 using Domain.Exceptions;
-using Infrastructure.Identity.Entities;
-using Infrastructure.Identity.Validators;
+using Infrastructure.Data.Identity.Entities;
+using Infrastructure.Data.Identity.Validators;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services;

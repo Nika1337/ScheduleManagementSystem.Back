@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions;
 using Domain.Abstractions;
-using Infrastructure.Data;
-using Infrastructure.Identity;
+using Infrastructure.Data.Domain;
+using Infrastructure.Data.Identity;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

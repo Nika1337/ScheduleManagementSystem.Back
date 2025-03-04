@@ -3,7 +3,7 @@ using Application.DataTransferObjects.Workers;
 using Domain.Abstractions;
 using Domain.Exceptions;
 using Domain.Models;
-using Infrastructure.Identity.Entities;
+using Infrastructure.Data.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
