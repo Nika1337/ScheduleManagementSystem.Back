@@ -22,12 +22,12 @@ internal class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
             .WithOne(sch => sch.ScheduleToChange);
 
         builder
-            .HasIndex(sch => sch.ScheduleOfWorkerId);
+            .HasIndex(sch => sch.ScheduleOfWorker.Id);
 
         builder
             .HasIndex(sch => sch.ScheduledAtDate);
 
         builder
-            .HasIndex(sch => new { sch.ScheduleOfWorkerId, sch.ScheduledAtDate });
+            .HasIndex(sch => new { sch.ScheduleOfWorker.Id, sch.ScheduledAtDate });
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Identity;
 
-internal class IdentityContext(DbContextOptions<IdentityContext> options) : IdentityDbContext<IdentityEmployee, IdentityRole<Guid>, Guid>(options)
+internal class IdentityContext(DbContextOptions<IdentityContext> options) : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
 
 }

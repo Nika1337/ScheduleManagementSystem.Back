@@ -60,9 +60,8 @@ public static class Dependencies
 
     private static void AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IEmployeeAuthenticationService, IdentityEmployeeAuthenticationService>();
-        services.AddScoped<IEmployeeService, IdentityEmployeeService>();
-        services.AddScoped<IWorkerService, WorkerService>();
+        services.AddScoped<IUserAuthenticationService, IdentityUserAuthenticationService>();
+        services.AddScoped<IWorkerService, IdentityWorkerService>();
         services.AddScoped<IJobService, JobService>();
         services.AddScoped<IPendingScheduleChangeService, PendingScheduleChangeService>();
         services.AddScoped<IScheduleService, ScheduleService>();

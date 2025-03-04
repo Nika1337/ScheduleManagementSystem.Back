@@ -5,26 +5,27 @@ namespace Profile.GetProfile;
 
 internal sealed class Endpoint : EndpointWithoutRequest<Response, Mapper>
 {
-    private readonly IEmployeeService _employeeService;
+    private readonly IWorkerService _userService;
 
-    public Endpoint(IEmployeeService employeeService)
+    public Endpoint(IWorkerService userService)
     {
-        _employeeService = employeeService;
+        _userService = userService;
     }
 
     public override void Configure()
     {
         Get("/profile");
+        Roles("Worker");
     }
 
     public override async Task HandleAsync(CancellationToken c)
     {
-        var employeeIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
-        var employeeId = Guid.Parse(employeeIdClaim);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
+        var userId = Guid.Parse(userIdClaim);
 
-        var employee = await _employeeService.GetEmployeeProfileAsync(employeeId);
+        var user = await _userService.GetWorkerProfileAsync(userId);
 
-        var response = Map.FromEntity(employee);
+        var response = Map.FromEntity(user);
 
         await SendAsync(response);
     }

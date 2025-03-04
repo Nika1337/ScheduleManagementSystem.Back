@@ -12,13 +12,13 @@ internal class ScheduleService : IScheduleService
 {
     private readonly IRepository<Schedule> _repository;
     private readonly IRepository<Job> _jobRepository;
-    private readonly IWorkerService _workerService;
+    private readonly IRepository<Worker> _workerRepository;
 
-    public ScheduleService(IRepository<Schedule> repository, IRepository<Job> jobRepository, IWorkerService workerService)
+    public ScheduleService(IRepository<Schedule> repository, IRepository<Job> jobRepository, IRepository<Worker> workerRepository)
     {
         _repository = repository;
         _jobRepository = jobRepository;
-        _workerService = workerService;
+        _workerRepository = workerRepository;
     }
 
     public async Task<IEnumerable<ScheduleDetailedResponse>> GetSchedulesAsync(DateOnly startDate, DateOnly endDate)
@@ -27,13 +27,11 @@ internal class ScheduleService : IScheduleService
 
         var schedules = await _repository.ListAsync(specification);
 
-        var workerFullNames = await _workerService.GetWorkerFullNamesAsync(schedules.Select(sch => sch.Id).ToList());
-
         var response = schedules.Select(sch => new ScheduleDetailedResponse
         {
             Id = sch.Id,
-            WorkerFirstName = workerFullNames[sch.WorkerId].FirstName,
-            WorkerLastName = workerFullNames[sch.WorkerId].LastName,
+            WorkerFirstName = sch.WorkerFirstName,
+            WorkerLastName = sch.WorkerFirstName,
             Date = sch.Date,
             PartOfDay = sch.PartOfDay,
         });
@@ -47,13 +45,12 @@ internal class ScheduleService : IScheduleService
 
         var entities = await _repository.ListAsync(specification);
         
-        var (FirstName, LastName) = await _workerService.GetWorkerFullNameAsync(workerId);
 
         var response = entities.Select(sch => new ScheduleDetailedResponse
         {
             Id = sch.Id,
-            WorkerFirstName = FirstName,
-            WorkerLastName = LastName,
+            WorkerFirstName = sch.WorkerFirstName,
+            WorkerLastName = sch.WorkerLastName,
             Date = sch.Date,
             PartOfDay = sch.PartOfDay,
         });
@@ -63,11 +60,18 @@ internal class ScheduleService : IScheduleService
 
     public async Task CreateScheduleAsync(ScheduleCreateRequest request)
     {
-        var job = await _jobRepository.GetByIdAsync(request.JobId) ?? throw new NotFoundException($"Job with id '{request.JobId}' not found.");
+        var jobTask = _jobRepository.GetByIdAsync(request.JobId);
+        var workerTask = _workerRepository.GetByIdAsync(request.WorkerId);
+
+        await Task.WhenAll(jobTask, workerTask);
+
+        var job = await jobTask ?? throw new NotFoundException($"Job with id '{request.JobId}' not found.");
+
+        var worker = await workerTask ?? throw new NotFoundException($"Worker with id '{request.WorkerId}' not found.");
 
         var schedule = new Schedule
         {
-            ScheduleOfWorkerId = request.WorkerId,
+            ScheduleOfWorker = worker,
             ScheduledAtDate = request.Date,
             ScheduledAtPartOfDay = request.PartOfDay,
             JobToPerform = job

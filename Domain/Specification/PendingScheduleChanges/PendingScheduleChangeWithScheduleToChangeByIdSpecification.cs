@@ -16,6 +16,6 @@ public class PendingScheduleChangeWithScheduleToChangeByIdSpecification : Single
     }
     public PendingScheduleChangeWithScheduleToChangeByIdSpecification(Guid id, Guid workerId) : this(id)
     {
-        Query.Where(scr => scr.ScheduleToChange.ScheduleOfWorkerId == workerId);
+        Query.Where(scr => scr.ScheduleToChange.ScheduleOfWorker.Id == workerId);
     }
 }

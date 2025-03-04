@@ -1,10 +1,11 @@
-﻿using Application.DataTransferObjects.Employees;
+﻿
+using Application.DataTransferObjects.Workers;
 
 namespace Profile.GetProfile;
 
-internal sealed class Mapper : ResponseMapper<Response, EmployeeProfileResponse>
+internal sealed class Mapper : ResponseMapper<Response, WorkerProfileResponse>
 {
-    public override Response FromEntity(EmployeeProfileResponse e)
+    public override Response FromEntity(WorkerProfileResponse e)
     {
         return new Response
         {

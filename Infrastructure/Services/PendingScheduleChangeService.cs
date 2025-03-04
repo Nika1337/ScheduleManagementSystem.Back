@@ -10,12 +10,10 @@ namespace Infrastructure.Services;
 internal class PendingScheduleChangeService : IPendingScheduleChangeService
 {
     private readonly IRepository<PendingScheduleChange> _repository;
-    private readonly IWorkerService _workerService;
 
-    public PendingScheduleChangeService(IRepository<PendingScheduleChange> repository, IWorkerService workerService)
+    public PendingScheduleChangeService(IRepository<PendingScheduleChange> repository)
     {
         _repository = repository;
-        _workerService = workerService;
     }
 
     public async Task<IEnumerable<PendingScheduleChangeResponse>> GetPendingScheduleChangesAsync()
@@ -24,13 +22,11 @@ internal class PendingScheduleChangeService : IPendingScheduleChangeService
 
         var entities = await _repository.ListAsync(specification);
 
-        var workerFullNames = await _workerService.GetWorkerFullNamesAsync(entities.Select(e => e.WorkerId).ToList());
-
         var response = entities.Select(scr => new PendingScheduleChangeResponse
         {
             Id = scr.Id,
-            WorkerFirstName = workerFullNames[scr.WorkerId].FirstName,
-            WorkerLastName = workerFullNames[scr.WorkerId].LastName,
+            WorkerFirstName = scr.WorkerFirstName,
+            WorkerLastName = scr.WorkerLastName,
             JobName = scr.JobName,
             PreviousDate = scr.PreviousDate,
             PreviousPartOfDay = scr.PreviousPartOfDay,
@@ -48,13 +44,11 @@ internal class PendingScheduleChangeService : IPendingScheduleChangeService
 
         var entities = await _repository.ListAsync(specification);
 
-        var (FirstName, LastName) = await _workerService.GetWorkerFullNameAsync(workerId);
-
         var response = entities.Select(scr => new PendingScheduleChangeResponse
         {
             Id = scr.Id,
-            WorkerFirstName = FirstName,
-            WorkerLastName = LastName,
+            WorkerFirstName = scr.WorkerFirstName,
+            WorkerLastName = scr.WorkerLastName,
             JobName = scr.JobName,
             PreviousDate = scr.PreviousDate,
             PreviousPartOfDay = scr.PreviousPartOfDay,

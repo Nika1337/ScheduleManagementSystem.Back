@@ -17,6 +17,6 @@ public class ScheduleWithPendingChangeByIdSpecification : SingleResultSpecificat
 
     public ScheduleWithPendingChangeByIdSpecification(Guid id, Guid workerId) : this(id)
     {
-        Query.Where(sch => sch.ScheduleOfWorkerId == workerId);
+        Query.Where(sch => sch.ScheduleOfWorker.Id == workerId);
     }
 }

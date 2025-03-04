@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Identity.Validators;
 
-internal class EmployeePasswordValidator : IPasswordValidator<IdentityEmployee>
+internal class EmployeePasswordValidator : IPasswordValidator<ApplicationUser>
 {
-    public Task<IdentityResult> ValidateAsync(UserManager<IdentityEmployee> manager, IdentityEmployee user, string? password)
+    public Task<IdentityResult> ValidateAsync(UserManager<ApplicationUser> manager, ApplicationUser user, string? password)
     {
         var errors = new List<IdentityError>();
 
@@ -81,24 +81,6 @@ internal class EmployeePasswordValidator : IPasswordValidator<IdentityEmployee>
             {
                 Code = "PasswordContainsUserName",
                 Description = "Password cannot contain the username."
-            });
-        }
-
-        if (!string.IsNullOrWhiteSpace(user.FirstName) && password.Contains(user.FirstName, StringComparison.OrdinalIgnoreCase))
-        {
-            errors.Add(new IdentityError
-            {
-                Code = "PasswordContainsFirstName",
-                Description = "Password cannot contain parts of the user's first name."
-            });
-        }
-
-        if (!string.IsNullOrWhiteSpace(user.LastName) && password.Contains(user.LastName, StringComparison.OrdinalIgnoreCase))
-        {
-            errors.Add(new IdentityError
-            {
-                Code = "PasswordContainsLastName",
-                Description = "Password cannot contain parts of the user's last name."
             });
         }
 

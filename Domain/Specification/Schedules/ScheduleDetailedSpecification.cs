@@ -15,7 +15,8 @@ public class ScheduleDetailedSpecification : Specification<Schedule, ScheduleDet
         Query.Select(s => new ScheduleDetailedResult
         {
             Id = s.Id,
-            WorkerId = s.ScheduleOfWorkerId,
+            WorkerFirstName = s.ScheduleOfWorker.FirstName,
+            WorkerLastName = s.ScheduleOfWorker.LastName,
             JobName = s.JobToPerform.Name,
             Date = s.ScheduledAtDate,
             PartOfDay = s.ScheduledAtPartOfDay
@@ -24,6 +25,6 @@ public class ScheduleDetailedSpecification : Specification<Schedule, ScheduleDet
 
     public ScheduleDetailedSpecification(Guid workerId, DateOnly startDate, DateOnly endDate) : this(startDate, endDate)
     {
-        Query.Where(s => s.ScheduleOfWorkerId == workerId);
+        Query.Where(s => s.ScheduleOfWorker.Id == workerId);
     }
 }

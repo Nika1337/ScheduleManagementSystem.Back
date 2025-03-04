@@ -1,38 +1,39 @@
 ﻿using Application.Abstractions;
-using Application.DataTransferObjects.Employees;
+using Application.DataTransferObjects.Workers;
 using System.Security.Claims;
 
 namespace Profile.UpdateProfile;
 
 internal sealed class Endpoint : Endpoint<Request>
 {
-    private readonly IEmployeeService _employeeService;
+    private readonly IWorkerService _userService;
 
-    public Endpoint(IEmployeeService employeeService)
+    public Endpoint(IWorkerService userService)
     {
-        _employeeService = employeeService;
+        _userService = userService;
     }
 
     public override void Configure()
     {
         Patch("/profile");
+        Roles("Worker");
     }
 
     public override async Task HandleAsync(Request r, CancellationToken c)
     {
-        var employeeIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
-        var employeeId = Guid.Parse(employeeIdClaim);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
+        var userId = Guid.Parse(userIdClaim);
 
-        var updateRequest = new EmployeeProfileUpdateRequest 
+        var updateRequest = new WorkerProfileUpdateRequest 
         {
-            Id = employeeId,
+            Id = userId,
             FirstName = r.FirstName,
             LastName = r.LastName,
             Email = r.Email
         };
 
 
-        await _employeeService.UpdateEmployeeAsync(updateRequest);
+        await _userService.UpdateWorkerAsync(updateRequest);
         await SendNoContentAsync();
     }
 

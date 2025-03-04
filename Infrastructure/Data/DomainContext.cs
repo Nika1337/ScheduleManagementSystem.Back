@@ -10,6 +10,7 @@ internal class DomainContext(DbContextOptions<DomainContext> options) : DbContex
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<PendingScheduleChange> PendingScheduleChanges { get; set; }
+    public DbSet<Worker> Workers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -18,5 +19,6 @@ internal class DomainContext(DbContextOptions<DomainContext> options) : DbContex
         builder.ApplyConfiguration(new JobConfiguration());
         builder.ApplyConfiguration(new ScheduleConfiguration());
         builder.ApplyConfiguration(new PendingScheduleChangeConfiguration());
+        builder.ApplyConfiguration(new WorkerConfiguration());
     }
 }

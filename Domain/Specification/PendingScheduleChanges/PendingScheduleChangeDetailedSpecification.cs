@@ -11,7 +11,8 @@ public class PendingScheduleChangeDetailedSpecification : Specification<PendingS
         Query.Select(scr => new PendingScheduleChangeDetailedResult
         {
             Id = scr.Id,
-            WorkerId = scr.ScheduleToChange.ScheduleOfWorkerId,
+            WorkerFirstName = scr.ScheduleToChange.ScheduleOfWorker.FirstName,
+            WorkerLastName = scr.ScheduleToChange.ScheduleOfWorker.LastName,
             JobName = scr.ScheduleToChange.JobToPerform.Name,
             PreviousDate = scr.ScheduleToChange.ScheduledAtDate,
             PreviousPartOfDay = scr.ScheduleToChange.ScheduledAtPartOfDay,
@@ -23,6 +24,6 @@ public class PendingScheduleChangeDetailedSpecification : Specification<PendingS
 
     public PendingScheduleChangeDetailedSpecification(Guid workerId) : this()
     {
-        Query.Where(scr => scr.ScheduleToChange.ScheduleOfWorkerId == workerId);
+        Query.Where(scr => scr.ScheduleToChange.ScheduleOfWorker.Id == workerId);
     }
 }
