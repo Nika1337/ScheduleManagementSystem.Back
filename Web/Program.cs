@@ -1,5 +1,6 @@
 using Presentation;
 using Infrastructure;
+using Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +20,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    await DataSeeder.SeedAsync(serviceProvider);
+}
+
+
 app.UseHttpsRedirection();
 app.UseCors("AllowLocalhost"); 
-app.UseAuthentication();
-app.UseAuthorization();
 app.UsePresentationLayer();
 
 app.Run();

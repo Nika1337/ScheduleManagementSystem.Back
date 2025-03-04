@@ -2,6 +2,7 @@
 using Application.Abstractions;
 using Application.DataTransferObjects.Users;
 using Domain.Exceptions;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace Auth.Login;

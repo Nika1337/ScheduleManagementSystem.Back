@@ -38,7 +38,8 @@ internal class IdentityWorkerService : IWorkerService
         var identityEmployee = new ApplicationUser
         {
             Id = employee.Id,
-            Email = request.Email
+            Email = request.Email,
+            UserName = request.Email
         };
 
         await _userManager.CreateAsync(identityEmployee, _temporaryPassword);

@@ -19,15 +19,16 @@ internal class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
 
         builder
             .HasOne(sch => sch.PendingScheduleChange)
-            .WithOne(sch => sch.ScheduleToChange);
+            .WithOne(sch => sch.ScheduleToChange)
+            .HasForeignKey<PendingScheduleChange>("ScheduleId");
 
         builder
-            .HasIndex(sch => sch.ScheduleOfWorker.Id);
+            .HasIndex("ScheduleOfWorkerId");
 
         builder
             .HasIndex(sch => sch.ScheduledAtDate);
 
         builder
-            .HasIndex(sch => new { sch.ScheduleOfWorker.Id, sch.ScheduledAtDate });
+            .HasIndex("ScheduleOfWorkerId", nameof(Schedule.ScheduledAtDate));
     }
 }

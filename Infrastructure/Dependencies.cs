@@ -2,6 +2,7 @@
 using Domain.Abstractions;
 using Infrastructure.Data.Domain;
 using Infrastructure.Data.Identity;
+using Infrastructure.Data.Identity.Entities;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,7 @@ public static class Dependencies
 
     private static void ConfigureIdentity(this IServiceCollection services)
     {
-        services.AddIdentityCore<IdentityUser>(options =>
+        services.AddIdentityCore<ApplicationUser>(options =>
         {
             options.Password.RequireDigit = false;
             options.Password.RequireLowercase = false;
@@ -46,7 +47,7 @@ public static class Dependencies
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             options.User.RequireUniqueEmail = false;
         })
-        .AddRoles<IdentityRole>()
+        .AddRoles<IdentityRole<Guid>>()
         .AddEntityFrameworkStores<IdentityContext>()
         .AddDefaultTokenProviders();
 
