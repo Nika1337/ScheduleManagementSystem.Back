@@ -3,7 +3,6 @@ using Application.DataTransferObjects.Workers;
 using Domain.Abstractions;
 using Domain.Exceptions;
 using Domain.Models;
-using Infrastructure.Identity;
 using Infrastructure.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -93,19 +92,11 @@ internal class IdentityWorkerService : IWorkerService
 
     public async Task UpdateWorkerAsync(WorkerProfileUpdateRequest request)
     {
-        var workerTask = _repository.GetByIdAsync(request.Id);
-        var workerUserTask = _userManager.FindByIdAsync(request.Id.ToString());
-
-        await Task.WhenAll(workerTask, workerUserTask);
-
-        var worker = await workerTask ?? throw new NotFoundException($"Worker with Id '{request.Id}' not found.");
-        var workerUser = await workerUserTask ?? throw new NotFoundException($"User with Id '{request.Id}' not found.");
+        var worker = await _repository.GetByIdAsync(request.Id) ?? throw new NotFoundException($"Worker with Id '{request.Id}' not found.");
 
         worker.FirstName = request.FirstName;
         worker.LastName = request.LastName;
-        workerUser.Email = request.Email;
 
         await _repository.UpdateAsync(worker);
-        await _userManager.UpdateAsync(workerUser);
     }
 }

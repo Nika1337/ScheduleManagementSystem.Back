@@ -28,8 +28,7 @@ internal sealed class Endpoint : Endpoint<Request>
         {
             Id = userId,
             FirstName = r.FirstName,
-            LastName = r.LastName,
-            Email = r.Email
+            LastName = r.LastName
         };
 
 
