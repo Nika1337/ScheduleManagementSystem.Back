@@ -7,7 +7,6 @@ internal sealed class Request
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
     public required string Email { get; init; }
-    public required string RoleName { get; init; }
 
     internal sealed class Validator : Validator<Request>
     {
@@ -25,9 +24,6 @@ internal sealed class Request
                 .NotEmpty()
                 .Length(1, 250)
                 .EmailAddress();
-
-            RuleFor(r => r.RoleName)
-                .NotEmpty();
         }
     }
 }

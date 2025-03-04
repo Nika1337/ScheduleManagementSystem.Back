@@ -10,8 +10,7 @@ internal sealed class Mapper : RequestMapper<Request, WorkerCreateRequest>
         {
             FirstName = r.FirstName,
             LastName = r.LastName,  
-            Email = r.Email,
-            RoleName = r.RoleName
+            Email = r.Email
         };
     }
 }
