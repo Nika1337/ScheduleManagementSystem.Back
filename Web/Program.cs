@@ -1,6 +1,7 @@
 using Presentation;
 using Infrastructure;
 using Infrastructure.Data;
+using Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.ConfigureExceptionHandler();
 
 using (var scope = app.Services.CreateScope())
 {
