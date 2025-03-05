@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.DataTransferObjects.PendingScheduleChanges;
+using Application.DataTransferObjects.Schedules;
 using Domain.Abstractions;
 using Domain.Exceptions;
 using Domain.Models;
@@ -10,10 +11,12 @@ namespace Infrastructure.Services;
 internal class PendingScheduleChangeService : IPendingScheduleChangeService
 {
     private readonly IRepository<PendingScheduleChange> _repository;
+    private readonly IScheduleNotificationService _scheduleNotificationService;
 
-    public PendingScheduleChangeService(IRepository<PendingScheduleChange> repository)
+    public PendingScheduleChangeService(IRepository<PendingScheduleChange> repository, IScheduleNotificationService scheduleNotificationService)
     {
         _repository = repository;
+        _scheduleNotificationService = scheduleNotificationService;
     }
 
     public async Task<IEnumerable<PendingScheduleChangeResponse>> GetPendingScheduleChangesAsync()
@@ -66,10 +69,21 @@ internal class PendingScheduleChangeService : IPendingScheduleChangeService
 
         var scheduleToChange = PendingScheduleChange.ScheduleToChange;
 
+        var oldDate = scheduleToChange.ScheduledAtDate;
+        var oldPartOfDay = scheduleToChange.ScheduledAtPartOfDay;
+
         scheduleToChange.ScheduledAtDate = PendingScheduleChange.NewDate;
         scheduleToChange.ScheduledAtPartOfDay = PendingScheduleChange.NewPartOfDay;
 
         await ResetPendingScheduleChange(scheduleToChange, PendingScheduleChange);
+
+        var scheduleChangeEvent = new ScheduleChangeEvent
+        {
+            WorkerId = scheduleToChange.ScheduleOfWorker.Id,
+            Message = $"Pending Schedule Change from {oldDate} {oldPartOfDay} to {PendingScheduleChange.NewDate} {PendingScheduleChange.NewPartOfDay} Accepted and changed for job {scheduleToChange.JobToPerform.Name}"
+        };
+
+        await _scheduleNotificationService.PublishChangeAsync(scheduleChangeEvent, default);
     }
 
     public async Task RejectPendingScheduleChange(Guid id)
@@ -78,7 +92,18 @@ internal class PendingScheduleChangeService : IPendingScheduleChangeService
 
         var scheduleToChange = PendingScheduleChange.ScheduleToChange;
 
+        var requestedDate = scheduleToChange.ScheduledAtDate;
+        var requestedPartOfDay = scheduleToChange.ScheduledAtPartOfDay;
+
         await ResetPendingScheduleChange(scheduleToChange, PendingScheduleChange);
+
+        var scheduleChangeEvent = new ScheduleChangeEvent
+        {
+            WorkerId = scheduleToChange.ScheduleOfWorker.Id,
+            Message = $"Pending Schedule Change from {scheduleToChange.ScheduledAtDate} {scheduleToChange.ScheduledAtPartOfDay} to {requestedDate} {requestedPartOfDay} Rejected for job {scheduleToChange.JobToPerform.Name}"
+        };
+
+        await _scheduleNotificationService.PublishChangeAsync(scheduleChangeEvent, default);
     }
 
     public async Task WithdrawPendingScheduleChange(Guid id, Guid workerId)

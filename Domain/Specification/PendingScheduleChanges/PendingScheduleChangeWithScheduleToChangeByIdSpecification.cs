@@ -10,7 +10,13 @@ public class PendingScheduleChangeWithScheduleToChangeByIdSpecification : Single
     {
         Query.Where(scr => scr.Id == id);
 
-        Query.Include(scr => scr.ScheduleToChange);
+        Query
+            .Include(scr => scr.ScheduleToChange)
+            .ThenInclude(sch => sch.JobToPerform);
+
+        Query
+           .Include(scr => scr.ScheduleToChange)
+           .ThenInclude(sch => sch.ScheduleOfWorker);
 
         Query.AsTracking();
     }

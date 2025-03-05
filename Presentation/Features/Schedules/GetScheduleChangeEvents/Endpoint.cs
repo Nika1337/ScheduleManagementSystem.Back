@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Schedules.GetScheduleChangeEvents;
 
-internal sealed class Endpoint : Endpoint<Request, Response, Mapper>
+internal sealed class Endpoint : EndpointWithoutRequest
 {
     private readonly IScheduleNotificationService _notificationService;
 
@@ -20,7 +20,7 @@ internal sealed class Endpoint : Endpoint<Request, Response, Mapper>
         Roles("Worker");
     }
 
-    public override async Task HandleAsync(Request r, CancellationToken c)
+    public override async Task HandleAsync(CancellationToken c)
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException();
         var userId = Guid.Parse(userIdClaim);
@@ -38,6 +38,14 @@ internal sealed class Endpoint : Endpoint<Request, Response, Mapper>
         await foreach (var change in _notificationService.SubscribeWorkerChanges(userId, ct))
         {
             yield return change;
+        }
+    }
+    private async IAsyncEnumerable<object> GetDataStream([EnumeratorCancellation] CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            await Task.Delay(1000);
+            yield return new { guid = Guid.NewGuid() };
         }
     }
 }

@@ -61,6 +61,7 @@ public static class Dependencies
 
     private static void AddServices(this IServiceCollection services)
     {
+        services.AddSingleton<IScheduleNotificationService, ScheduleNotificationService>();
         services.AddScoped<IUserAuthenticationService, IdentityUserAuthenticationService>();
         services.AddScoped<IWorkerService, IdentityWorkerService>();
         services.AddScoped<IJobService, JobService>();

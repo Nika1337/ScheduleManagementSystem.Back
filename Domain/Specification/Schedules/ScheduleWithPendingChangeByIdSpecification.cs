@@ -12,6 +12,10 @@ public class ScheduleWithPendingChangeByIdSpecification : SingleResultSpecificat
 
         Query.Include(sch => sch.PendingScheduleChange);
 
+        Query.Include(sch => sch.JobToPerform);
+
+        Query.Include(sch => sch.ScheduleOfWorker);
+
         Query.AsTracking();
     }
 

@@ -13,12 +13,14 @@ internal class ScheduleService : IScheduleService
     private readonly IRepository<Schedule> _repository;
     private readonly IRepository<Job> _jobRepository;
     private readonly IRepository<Worker> _workerRepository;
+    private readonly IScheduleNotificationService _scheduleNotificationService;
 
-    public ScheduleService(IRepository<Schedule> repository, IRepository<Job> jobRepository, IRepository<Worker> workerRepository)
+    public ScheduleService(IRepository<Schedule> repository, IRepository<Job> jobRepository, IRepository<Worker> workerRepository, IScheduleNotificationService scheduleNotificationService)
     {
         _repository = repository;
         _jobRepository = jobRepository;
         _workerRepository = workerRepository;
+        _scheduleNotificationService = scheduleNotificationService;
     }
 
     public async Task<IEnumerable<ScheduleDetailedResponse>> GetSchedulesAsync(DateOnly startDate, DateOnly endDate)
@@ -75,6 +77,15 @@ internal class ScheduleService : IScheduleService
         };
 
         await _repository.AddAsync(schedule);
+
+
+        var scheduleChangeEvent = new ScheduleChangeEvent
+        {
+            WorkerId = request.WorkerId,
+            Message = $"New Schedule created for job {job.Name} at {schedule.ScheduledAtDate} {schedule.ScheduledAtPartOfDay}"
+        };
+
+        await _scheduleNotificationService.PublishChangeAsync(scheduleChangeEvent, default);
     }
 
     public async Task ChangeScheduleAsync(ScheduleChangeRequest request)
@@ -83,12 +94,24 @@ internal class ScheduleService : IScheduleService
 
         var schedule = await _repository.SingleOrDefaultAsync(specification) ?? throw new NotFoundException($"Schedule with id '{request.Id}' not found");
 
+        var oldDate = schedule.ScheduledAtDate;
+        var oldPartOfDay = schedule.ScheduledAtPartOfDay;
+
         schedule.PendingScheduleChange = null;
 
         schedule.ScheduledAtDate = request.Date;
         schedule.ScheduledAtPartOfDay = request.PartOfDay;
 
         await _repository.UpdateAsync(schedule);
+
+
+        var scheduleChangeEvent = new ScheduleChangeEvent
+        {
+            WorkerId = schedule.ScheduleOfWorker.Id,
+            Message = $"Schedule rescheduled for job {schedule.JobToPerform.Name} from {oldDate} {oldPartOfDay} to {schedule.ScheduledAtDate} {schedule.ScheduledAtPartOfDay}"
+        };
+
+        await _scheduleNotificationService.PublishChangeAsync(scheduleChangeEvent, default);
     }
 
     public async Task RequestScheduleChangeAsync(ScheduleChangeByWorkerRequest request)
