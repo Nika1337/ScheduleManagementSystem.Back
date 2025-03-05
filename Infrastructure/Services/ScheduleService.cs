@@ -30,8 +30,9 @@ internal class ScheduleService : IScheduleService
         var response = schedules.Select(sch => new ScheduleDetailedResponse
         {
             Id = sch.Id,
+            JobName = sch.JobName,
             WorkerFirstName = sch.WorkerFirstName,
-            WorkerLastName = sch.WorkerFirstName,
+            WorkerLastName = sch.WorkerLastName,
             Date = sch.Date,
             PartOfDay = sch.PartOfDay,
         });
@@ -49,6 +50,7 @@ internal class ScheduleService : IScheduleService
         var response = entities.Select(sch => new ScheduleDetailedResponse
         {
             Id = sch.Id,
+            JobName = sch.JobName,
             WorkerFirstName = sch.WorkerFirstName,
             WorkerLastName = sch.WorkerLastName,
             Date = sch.Date,
@@ -60,14 +62,9 @@ internal class ScheduleService : IScheduleService
 
     public async Task CreateScheduleAsync(ScheduleCreateRequest request)
     {
-        var jobTask = _jobRepository.GetByIdAsync(request.JobId);
-        var workerTask = _workerRepository.GetByIdAsync(request.WorkerId);
+        var job = await _jobRepository.GetByIdAsync(request.JobId) ?? throw new NotFoundException($"Job with id '{request.JobId}' not found.");
 
-        await Task.WhenAll(jobTask, workerTask);
-
-        var job = await jobTask ?? throw new NotFoundException($"Job with id '{request.JobId}' not found.");
-
-        var worker = await workerTask ?? throw new NotFoundException($"Worker with id '{request.WorkerId}' not found.");
+        var worker = await _workerRepository.GetByIdAsync(request.WorkerId) ?? throw new NotFoundException($"Worker with id '{request.WorkerId}' not found.");
 
         var schedule = new Schedule
         {

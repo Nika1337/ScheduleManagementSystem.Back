@@ -9,6 +9,7 @@ internal sealed class Mapper : ResponseMapper<Response, ScheduleDetailedResponse
         return new Response
         {
             Id = e.Id,
+            JobName = e.JobName,
             WorkerFirstName = e.WorkerFirstName,
             WorkerLastName = e.WorkerLastName,
             Date = e.Date,

@@ -25,6 +25,7 @@ internal sealed class Request
 internal sealed class Response
 {
     public required Guid Id { get; init; }
+    public required string JobName { get; init; }
     public required string WorkerFirstName { get; init; }
     public required string WorkerLastName { get; init; }
     public required DateOnly Date { get; init; }
