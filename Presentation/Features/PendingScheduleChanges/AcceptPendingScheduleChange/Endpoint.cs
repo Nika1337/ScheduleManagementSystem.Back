@@ -14,6 +14,7 @@ internal sealed class Endpoint : Endpoint<Request>
     public override void Configure()
     {
         Post("/pending-schedule-changes/{Id}/accept");
+        Description(x => x.Accepts<Request>());
         Roles("Admin");
     }
 
