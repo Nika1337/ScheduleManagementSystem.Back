@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.DataTransferObjects.Schedules;
+using Domain.Exceptions;
 using System.Security.Claims;
 
 namespace Schedules.ChangeSchedule;
@@ -24,31 +25,38 @@ internal sealed class Endpoint : Endpoint<Request>
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 
-        if (userRole == "Admin")
+        try
         {
-            var request = new ScheduleChangeRequest
+            if (userRole == "Admin")
             {
-                Id = r.Id,
-                Date = r.Date,
-                PartOfDay = r.PartOfDay
-            };
-            await _scheduleService.ChangeScheduleAsync(request);
-        }
-        else if (userRole == "Worker" && Guid.TryParse(userId, out var workerId))
-        {
-            var request = new ScheduleChangeByWorkerRequest
+                var request = new ScheduleChangeRequest
+                {
+                    Id = r.Id,
+                    Date = r.Date,
+                    PartOfDay = r.PartOfDay
+                };
+                await _scheduleService.ChangeScheduleAsync(request);
+            }
+            else if (userRole == "Worker" && Guid.TryParse(userId, out var workerId))
             {
-                WorkerId = workerId,
-                Id = r.Id,
-                Date = r.Date,
-                PartOfDay = r.PartOfDay
-            };
-            await _scheduleService.RequestScheduleChangeAsync(request);
+                var request = new ScheduleChangeByWorkerRequest
+                {
+                    WorkerId = workerId,
+                    Id = r.Id,
+                    Date = r.Date,
+                    PartOfDay = r.PartOfDay
+                };
+                await _scheduleService.RequestScheduleChangeAsync(request);
+            }
+            else
+            {
+                await SendForbiddenAsync();
+                return;
+            }
         }
-        else
+        catch (DuplicateException)
         {
-            await SendForbiddenAsync();
-            return;
+            ThrowError("Worker already has schedule at given date and part of day.");
         }
 
 

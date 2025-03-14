@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions;
+using Domain.Exceptions;
 
 namespace Schedules.AddSchedule;
 
@@ -21,7 +22,14 @@ internal sealed class Endpoint : EndpointWithMapper<Request, Mapper>
     {
         var scheduleCreateRequest = Map.ToEntity(r);
 
-        await _scheduleService.CreateScheduleAsync(scheduleCreateRequest);
+        try
+        {
+            await _scheduleService.CreateScheduleAsync(scheduleCreateRequest);
+        }
+        catch (DuplicateException)
+        {
+            ThrowError("Worker already has schedule at given date and part of day.");
+        }
 
         await SendNoContentAsync();
     }
