@@ -1,6 +1,7 @@
 ﻿
 using Application.Abstractions;
 using Application.DataTransferObjects.Schedules;
+using Azure.Core;
 using Domain.Abstractions;
 using Domain.Exceptions;
 using Domain.Models;
@@ -68,6 +69,8 @@ internal class ScheduleService : IScheduleService
 
         var worker = await _workerRepository.GetByIdAsync(request.WorkerId) ?? throw new NotFoundException($"Worker with id '{request.WorkerId}' not found.");
 
+        await ThrowIfWorkerHasScheduleAtGivenTime(request.WorkerId, request.Date, request.PartOfDay);
+
         var schedule = new Schedule
         {
             ScheduleOfWorker = worker,
@@ -93,6 +96,10 @@ internal class ScheduleService : IScheduleService
         var specification = new ScheduleWithPendingChangeByIdSpecification(request.Id);
 
         var schedule = await _repository.SingleOrDefaultAsync(specification) ?? throw new NotFoundException($"Schedule with id '{request.Id}' not found");
+
+
+        await ThrowIfWorkerHasScheduleAtGivenTime(schedule.ScheduleOfWorker.Id, request.Date, request.PartOfDay);
+
 
         var oldDate = schedule.ScheduledAtDate;
         var oldPartOfDay = schedule.ScheduledAtPartOfDay;
@@ -120,6 +127,8 @@ internal class ScheduleService : IScheduleService
 
         var schedule = await _repository.SingleOrDefaultAsync(specification) ?? throw new NotFoundException($"Schedule with id '{request.Id}' not found");
 
+        await ThrowIfWorkerHasScheduleAtGivenTime(request.WorkerId, request.Date, request.PartOfDay);
+
         schedule.PendingScheduleChange = new PendingScheduleChange
         {
             ScheduleToChange = schedule,
@@ -129,5 +138,16 @@ internal class ScheduleService : IScheduleService
         };
 
         await _repository.UpdateAsync(schedule);
+    }
+
+    private async Task ThrowIfWorkerHasScheduleAtGivenTime(Guid workerId, DateOnly date, PartOfDay partOfDay)
+    {
+        var scheduleSpecification = new ScheduleByWorkerIdDatePartSpecification(workerId, date, partOfDay);
+        var workerHasScheduleAtNewDate = await _repository.AnyAsync(scheduleSpecification);
+
+        if (workerHasScheduleAtNewDate)
+        {
+            throw new DuplicateException();
+        }
     }
 }
